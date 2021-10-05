@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Value;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -173,13 +174,24 @@ public class DataGenerator {
             return invalidCard;
         }
 
+        public static CardInfo getLastMonth() {
+            CardInfo invalidCard = new CardInfo(
+                    getValidCardNumber(),
+                    generateLastMonth(),
+                    generateValidYear(),
+                    generateValidOwner(),
+                    generateValidCVC()
+            );
+            return invalidCard;
+        }
+
 //  Тестовые данные для проверки поля "Год";
 
-        public static CardInfo getInvalidYearField() {
+        public static CardInfo getLastYear() {
             CardInfo invalidCard = new CardInfo(
                     getValidCardNumber(),
                     generateValidMonth(),
-                    "19",
+                    generateLastYear(),
                     generateValidOwner(),
                     generateValidCVC()
             );
@@ -224,6 +236,28 @@ public class DataGenerator {
                     getValidCardNumber(),
                     generateValidMonth(),
                     "Abc",
+                    generateValidOwner(),
+                    generateValidCVC()
+            );
+            return invalidCard;
+        }
+
+        public static CardInfo getYearHasExpired() {
+            CardInfo invalidCard = new CardInfo(
+                    getValidCardNumber(),
+                    generateValidMonth(),
+                    generateYearHasExpired(),
+                    generateValidOwner(),
+                    generateValidCVC()
+            );
+            return invalidCard;
+        }
+
+        public static CardInfo getYearBeforeExpirationDate() {
+            CardInfo invalidCard = new CardInfo(
+                    getValidCardNumber(),
+                    generateValidMonth(),
+                    generateYearBeforeExpirationDate(),
                     generateValidOwner(),
                     generateValidCVC()
             );
@@ -416,22 +450,32 @@ public class DataGenerator {
     }
 
     public static String generateValidMonth() {
-        int monthNow = LocalDate.now().getMonthValue();
-        int month = faker.random().nextInt(monthNow, 12);
+        LocalDate monthNow = LocalDate.now();
+        return monthNow.format(DateTimeFormatter.ofPattern("MM"));
+    }
 
-        if (month < 10) {
-            return "0" + month;
-        }
-        return Integer.toString(month);
+    public static String generateLastMonth() {
+        LocalDate monthLast = LocalDate.now().minusMonths(1);
+        return monthLast.format(DateTimeFormatter.ofPattern("MM"));
     }
 
     public static String generateValidYear() {
-        int yearNow = LocalDate.now().getYear() % 100;
-        int year = faker.random().nextInt(yearNow, 26);
+        LocalDate monthNow = LocalDate.now();
+        return monthNow.format(DateTimeFormatter.ofPattern("yy"));
+    }
 
-        if (year <= 9) {
-            return "0" + year;
-        }
-        return Integer.toString(year);
+    public static String generateLastYear() {
+        LocalDate monthNow = LocalDate.now().minusYears(1);
+        return monthNow.format(DateTimeFormatter.ofPattern("yy"));
+    }
+
+    public static String generateYearHasExpired() {
+        LocalDate monthNow = LocalDate.now().plusYears(6);
+        return monthNow.format(DateTimeFormatter.ofPattern("yy"));
+    }
+
+    public static String generateYearBeforeExpirationDate() {
+        LocalDate monthNow = LocalDate.now().plusYears(5);
+        return monthNow.format(DateTimeFormatter.ofPattern("yy"));
     }
 }

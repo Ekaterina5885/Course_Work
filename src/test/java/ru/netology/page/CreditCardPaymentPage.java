@@ -74,7 +74,7 @@ public class CreditCardPaymentPage {
         $(byText("Поле обязательно для заполнения")).shouldBe(Condition.visible, Duration.ofSeconds(20));
     }
 
-    public void errorMessageByIncorrectFormatMonthField() {
+    public void errorMessageCardExpirationDateIncorrect() {
         $(byText("Неверно указан срок действия карты")).shouldBe(Condition.visible, Duration.ofSeconds(20));
     }
 

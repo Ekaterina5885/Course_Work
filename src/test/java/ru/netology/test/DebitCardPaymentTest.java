@@ -1,7 +1,5 @@
 package ru.netology.test;
 
-import com.codeborne.selenide.logevents.SelenideLogger;
-import io.qameta.allure.selenide.AllureSelenide;
 import org.junit.jupiter.api.*;
 import ru.netology.data.DataGenerator;
 import ru.netology.db.DataBase;
@@ -20,16 +18,6 @@ public class DebitCardPaymentTest {
         open("http://localhost:8080");
     }
 
-    @BeforeAll
-    static void setUpAll() {
-        SelenideLogger.addListener("allure", new AllureSelenide());
-    }
-
-    @AfterAll
-    static void tearDownAll() {
-        SelenideLogger.removeListener("allure");
-    }
-
 // Проверка поля "Номер карты";
 
     // Позитивный тест: Номер карты со статусом: "APPROVED";
@@ -43,7 +31,7 @@ public class DebitCardPaymentTest {
         assertEquals("APPROVED", DataBase.getDebitCardTransactionStatus());
     }
 
-    // Позитивный тест: Номер карты со статусом: "DECLINED";
+    // Негативный тест: Номер карты со статусом: "DECLINED";
     @Test
     @Order(2)
     void shouldGetErrorIfCardNumberWithRejectedNumber() {
@@ -85,7 +73,7 @@ public class DebitCardPaymentTest {
         debitCard.errorMessageIncorrectFormat();
     }
 
-    // Негативный тест: Поле 'Номер карты' состоит из букв;
+    // Негативный тест: Поле 'Номер карты' состоит из букв латинского алфавита;
     @Test
     @Order(6)
     void shouldGetErrorIfCardNumberFieldConsistsLetters() {
@@ -117,14 +105,14 @@ public class DebitCardPaymentTest {
 
 // Проверка поля "Месяц";
 
-    // Негативный тест: Поле 'Месяц' заполнено невалидными данными;
+    // Негативный тест: Поле 'Месяц' заполнено несуществующей датой;
     @Test
     @Order(9)
     void shouldGetErrorIfInvalidMonthField() {
         titlePage.debitCardPayment();
         var invalidDebitCard = DataGenerator.CardInfo.getInvalidMonthField();
         debitCard.invalidFillFieldDebitCard(invalidDebitCard);
-        debitCard.errorMessageByIncorrectFormatMonthField();
+        debitCard.errorMessageCardExpirationDateIncorrect();
     }
 
     // Негативный тест: Поле 'Месяц' состоит из спецсимволов;
@@ -167,21 +155,31 @@ public class DebitCardPaymentTest {
         debitCard.errorMessageIncorrectFormat();
     }
 
-// Проверка поля "Год";
-
-    // Негативный тест: Поле 'Год' заполнено невалидными данными;
+    // Негативный тест: В поле 'Месяц' указана дата прошедшего месяца;
     @Test
     @Order(14)
-    void shouldGetErrorIfInvalidYearField() {
+    void shouldGetErrorIfMonthHasExpired() {
         titlePage.debitCardPayment();
-        var invalidDebitCard = DataGenerator.CardInfo.getInvalidYearField();
+        var invalidDebitCard = DataGenerator.CardInfo.getLastMonth();
+        debitCard.invalidFillFieldDebitCard(invalidDebitCard);
+        debitCard.errorMessageCardExpirationDateIncorrect();
+    }
+
+// Проверка поля "Год";
+
+    // Негативный тест: Поле 'Год' состоит из даты прошедшего года;
+    @Test
+    @Order(15)
+    void shouldGetErrorIfLastYear() {
+        titlePage.creditCardPayment();
+        var invalidDebitCard = DataGenerator.CardInfo.getLastYear();
         debitCard.invalidFillFieldDebitCard(invalidDebitCard);
         debitCard.errorMessageByIncorrectFormatYearField();
     }
 
     // Негативный тест: Поле 'Год' состоит из спецсимволов;
     @Test
-    @Order(15)
+    @Order(16)
     void shouldGetErrorIfYearFieldWithSpecialCharacters() {
         titlePage.debitCardPayment();
         var invalidDebitCard = DataGenerator.CardInfo.getYearFieldWithSpecialCharacters();
@@ -191,7 +189,7 @@ public class DebitCardPaymentTest {
 
     // Негативный тест: Поле 'Год' пустое;
     @Test
-    @Order(16)
+    @Order(17)
     void shouldGetErrorIfYearFieldEmpty() {
         titlePage.debitCardPayment();
         var invalidDebitCard = DataGenerator.CardInfo.getYearFieldEmpty();
@@ -201,7 +199,7 @@ public class DebitCardPaymentTest {
 
     // Негативный тест: Поле 'Год' состоит из одного символа;
     @Test
-    @Order(17)
+    @Order(18)
     void shouldGetErrorIfYearFieldConsistsOneCharacters() {
         titlePage.debitCardPayment();
         var invalidDebitCard = DataGenerator.CardInfo.getYearFieldOneCharacter();
@@ -211,7 +209,7 @@ public class DebitCardPaymentTest {
 
     // Негативный тест: Поле 'Год' состоит из букв;
     @Test
-    @Order(18)
+    @Order(19)
     void shouldGetErrorIfYearFieldConsistsOfLetters() {
         titlePage.debitCardPayment();
         var invalidDebitCard = DataGenerator.CardInfo.getYearFieldConsistsOfLetters();
@@ -219,11 +217,32 @@ public class DebitCardPaymentTest {
         debitCard.errorMessageIncorrectFormat();
     }
 
+    // Негативный тест: Поле 'Год' указан срок действия карты, который заканчивается через 6 лет;
+    @Test
+    @Order(20)
+    void shouldGetErrorIfYearHasExpired() {
+        titlePage.creditCardPayment();
+        var invalidDebitCard = DataGenerator.CardInfo.getYearHasExpired();
+        debitCard.invalidFillFieldDebitCard(invalidDebitCard);
+        debitCard.errorMessageCardExpirationDateIncorrect();
+    }
+
+    // Позитивный тест: Поле 'Год' указан срок действия карты, который заканчивается через 5 лет;
+    @Test
+    @Order(21)
+    void shouldGetErrorIfYearBeforeExpirationDate() {
+        titlePage.creditCardPayment();
+        var invalidDebitCard = DataGenerator.CardInfo.getYearBeforeExpirationDate();
+        debitCard.invalidFillFieldDebitCard(invalidDebitCard);
+        debitCard.approvedMessage();
+        assertEquals("APPROVED", DataBase.getDebitCardTransactionStatus());
+    }
+
 // Проверка поля "Владелец";
 
     // Негативный тест: Поле 'Владелец' состоит из букв и цифр;
     @Test
-    @Order(19)
+    @Order(22)
     void shouldGetErrorIfInvalidOwnerField() {
         titlePage.debitCardPayment();
         var invalidDebitCard = DataGenerator.CardInfo.getOwnerFieldWithLettersAndNumbers();
@@ -233,7 +252,7 @@ public class DebitCardPaymentTest {
 
     // Негативный тест: Поле 'Владелец' состоит из спецсимволов;
     @Test
-    @Order(20)
+    @Order(23)
     void shouldGetErrorIfOwnerFieldWithSpecialCharacters() {
         titlePage.debitCardPayment();
         var invalidDebitCard = DataGenerator.CardInfo.getOwnerFieldWithSpecialCharacters();
@@ -243,7 +262,7 @@ public class DebitCardPaymentTest {
 
     // Негативный тест: Поле 'Владелец' пустое;
     @Test
-    @Order(21)
+    @Order(24)
     void shouldGetErrorIfOwnerFieldEmpty() {
         titlePage.debitCardPayment();
         var invalidDebitCard = DataGenerator.CardInfo.getOwnerFieldEmpty();
@@ -253,7 +272,7 @@ public class DebitCardPaymentTest {
 
     // Негативный тест: Поле 'Владелец' состоит из одного символа;
     @Test
-    @Order(22)
+    @Order(25)
     void shouldGetErrorIfOwnerFieldConsistsOneCharacters() {
         titlePage.debitCardPayment();
         var invalidDebitCard = DataGenerator.CardInfo.getOwnerFieldConsistsOneCharacters();
@@ -261,19 +280,20 @@ public class DebitCardPaymentTest {
         debitCard.errorMessageIncorrectFormat();
     }
 
-    // Негативный тест: Поле 'Владелец' состоит из двойной фамилии;
+    // Позитивный тест: Поле 'Владелец' состоит из двойной фамилии;
     @Test
-    @Order(23)
+    @Order(26)
     void shouldGetErrorIfOwnerFieldWithDoubleSurname() {
         titlePage.debitCardPayment();
         var invalidDebitCard = DataGenerator.CardInfo.getOwnerFieldWithDoubleSurname();
         debitCard.invalidFillFieldDebitCard(invalidDebitCard);
         debitCard.approvedMessage();
+        assertEquals("APPROVED", DataBase.getDebitCardTransactionStatus());
     }
 
     // Негативный тест: Поле 'Владелец' заполнено на кириллице;
     @Test
-    @Order(24)
+    @Order(27)
     void shouldGetErrorIfOwnerFieldInCyrillic() {
         titlePage.debitCardPayment();
         var invalidDebitCard = DataGenerator.CardInfo.getOwnerFieldInCyrillic();
@@ -283,7 +303,7 @@ public class DebitCardPaymentTest {
 
     // Негативный тест: Поле 'Владелец' состоит из букв разного регистра;
     @Test
-    @Order(25)
+    @Order(28)
     void shouldGetErrorIfOwnerFieldConsistsOfLetters() {
         titlePage.debitCardPayment();
         var invalidDebitCard = DataGenerator.CardInfo.getOwnerFieldConsistsOfLettersDifferentRegister();
@@ -293,7 +313,7 @@ public class DebitCardPaymentTest {
 
     // Негативный тест: Проверка поля 'Владелец' на параметр maxLength;
     @Test
-    @Order(26)
+    @Order(29)
     void shouldGetErrorIfOwnerFieldWithMaxLength() {
         titlePage.debitCardPayment();
         var invalidDebitCard = DataGenerator.CardInfo.getOwnerFieldWithMaxLength();
@@ -305,7 +325,7 @@ public class DebitCardPaymentTest {
 
     // Негативный тест: Поле 'CVC' заполнено невалидными данными;
     @Test
-    @Order(27)
+    @Order(30)
     void shouldGetErrorIfInvalidCVCField() {
         titlePage.debitCardPayment();
         var invalidDebitCard = DataGenerator.CardInfo.getInvalidCVCField();
@@ -315,7 +335,7 @@ public class DebitCardPaymentTest {
 
     // Негативный тест: Поле 'CVC' состоит из спецсимволов;
     @Test
-    @Order(28)
+    @Order(31)
     void shouldGetErrorIfCVCFieldWithSpecialCharacters() {
         titlePage.debitCardPayment();
         var invalidDebitCard = DataGenerator.CardInfo.getCVCFieldWithSpecialCharacters();
@@ -325,7 +345,7 @@ public class DebitCardPaymentTest {
 
     // Негативный тест: Поле 'CVC' пустое;
     @Test
-    @Order(29)
+    @Order(32)
     void shouldGetErrorIfCVCFieldEmpty() {
         titlePage.debitCardPayment();
         var invalidDebitCard = DataGenerator.CardInfo.getCVCFieldEmpty();
@@ -335,7 +355,7 @@ public class DebitCardPaymentTest {
 
     // Негативный тест: Поле 'CVC' состоит из одного символа;
     @Test
-    @Order(30)
+    @Order(33)
     void shouldGetErrorIfCVCFieldConsistsOneCharacters() {
         titlePage.debitCardPayment();
         var invalidDebitCard = DataGenerator.CardInfo.getCVCFieldConsistsOneCharacters();
@@ -345,7 +365,7 @@ public class DebitCardPaymentTest {
 
     // Негативный тест: Поле 'CVC' состоит из букв;
     @Test
-    @Order(31)
+    @Order(34)
     void shouldGetErrorIfCVCFieldConsistsOfLetters() {
         titlePage.debitCardPayment();
         var invalidDebitCard = DataGenerator.CardInfo.getCVCFieldConsistsOfLetters();
