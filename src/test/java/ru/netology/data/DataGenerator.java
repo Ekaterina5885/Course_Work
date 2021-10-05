@@ -460,22 +460,22 @@ public class DataGenerator {
     }
 
     public static String generateValidYear() {
-        LocalDate monthNow = LocalDate.now();
-        return monthNow.format(DateTimeFormatter.ofPattern("yy"));
+        LocalDate yearNow = LocalDate.now();
+        return yearNow.format(DateTimeFormatter.ofPattern("yy"));
     }
 
     public static String generateLastYear() {
-        LocalDate monthNow = LocalDate.now().minusYears(1);
-        return monthNow.format(DateTimeFormatter.ofPattern("yy"));
+        LocalDate yearLast = LocalDate.now().minusYears(1);
+        return yearLast.format(DateTimeFormatter.ofPattern("yy"));
     }
 
     public static String generateYearHasExpired() {
-        LocalDate monthNow = LocalDate.now().plusYears(6);
-        return monthNow.format(DateTimeFormatter.ofPattern("yy"));
+        LocalDate yearExpired = LocalDate.now().plusYears(6);
+        return yearExpired.format(DateTimeFormatter.ofPattern("yy"));
     }
 
     public static String generateYearBeforeExpirationDate() {
-        LocalDate monthNow = LocalDate.now().plusYears(5);
-        return monthNow.format(DateTimeFormatter.ofPattern("yy"));
+        LocalDate yearBeforeExpired = LocalDate.now().plusYears(5);
+        return yearBeforeExpired.format(DateTimeFormatter.ofPattern("yy"));
     }
 }
