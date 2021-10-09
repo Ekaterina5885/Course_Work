@@ -23,7 +23,7 @@
 
 ### **Для запуска Postgres**
 
-   - **1.** Выполнить в окне Терминала команду: ```docker-compose -f docker-compose-postgres.yml up -d```
+   - **1.** Выполнить в окне Терминала команду: ```docker-compose -f docker-compose-postgres.yml up```
    - **2.** Открыть новую вкладку в окне Терминала.
    - **3.** Выполнить в окне Терминала команду: ```java -jar "-Dspring.datasource.url=jdbc:postgresql://localhost:5432/app" ./artifacts/aqa-shop.jar```
    - **4.** Выполнить команду:```gradlew "-Ddb.url=jdbc:postgresql://localhost:5432/app" clean test```
