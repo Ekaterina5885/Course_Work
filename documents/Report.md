@@ -28,7 +28,7 @@
 
 ### **Отчет по результатам тестирования:**
 
-[Отчет по результатам тестирования - Gradle](https://github.com/Ekaterina5885/Course_Work/blob/master/img/Report%20Gradle.png)
+[Отчет по результатам тестирования - Gradle](https://github.com/Ekaterina5885/Course_Work/blob/master/documents/ReportGradle.png)
 
 По результату тестирования, были выявлены баги, о чем заведены баг-репорты 
 с описанием выявленных дефектов и оформлены в разделе [Issues](https://github.com/Ekaterina5885/Course_Work/issues)
