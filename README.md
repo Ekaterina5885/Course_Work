@@ -25,9 +25,9 @@
 
    - **1.** Выполнить в окне Терминала команду: ```docker-compose -f docker-compose-postgres.yml up -d```
    - **2.** Открыть новую вкладку в окне Терминала.
-   - **5.** Выполнить в окне Терминала команду: ```java -jar "-Dspring.datasource.url=jdbc:postgresql://localhost:5432/app" ./artifacts/aqa-shop.jar```
-   - **6.** Выполнить команду:```gradlew "-Ddb.url=jdbc:postgresql://localhost:5432/app" clean test```
-   - **9.** Остановить работу приложения сочетанием клавиш:```Ctrl + C```
+   - **3.** Выполнить в окне Терминала команду: ```java -jar "-Dspring.datasource.url=jdbc:postgresql://localhost:5432/app" ./artifacts/aqa-shop.jar```
+   - **4.** Выполнить команду:```gradlew "-Ddb.url=jdbc:postgresql://localhost:5432/app" clean test```
+   - **5.** Остановить работу приложения сочетанием клавиш:```Ctrl + C```
 
 ### Документация
 
