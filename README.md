@@ -36,8 +36,3 @@
 [Отчёт о проведённом тестировании](https://github.com/Ekaterina5885/Course_Work/blob/master/documents/Report.md)
 
 [Отчёт о проведённой автоматизации](https://github.com/Ekaterina5885/Course_Work/blob/master/documents/Summary.md)
-
-
-java -Dspring.datasource.url=jdbc:mysql://localhost:3306/app -jar ./artifacts/aqa-shop.jar
-java -jar "-Dspring.datasource.url=jdbc:postgresql://localhost:5432/app" ./artifacts/aqa-shop.jar
-java -Dspring.datasource.url=jdbc:mysql://192.168.99.100:3306/app -jar aqa-shop.jar
