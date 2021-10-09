@@ -11,12 +11,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class CreditCardPaymentTest {
 
-    private final CreditCardPaymentPage creditCard = new CreditCardPaymentPage();
-    private final TitlePage titlePage = new TitlePage();
+    private CreditCardPaymentPage creditCard;
+    private TitlePage titlePage;
 
     @BeforeEach
     public void setOpen() {
-        open("http://localhost:8080");
+        titlePage = open("http://localhost:8080", TitlePage.class);
     }
 
 // Проверка поля "Номер карты";
@@ -25,7 +25,7 @@ public class CreditCardPaymentTest {
     @Test
     @Order(1)
     void shouldSendFormSuccessFully() {
-        titlePage.creditCardPayment();
+        creditCard = titlePage.creditCardPayment();
         var validCreditCard = DataGenerator.CardInfo.getValidCardPayment();
         creditCard.validFillFieldCreditCard(validCreditCard);
         creditCard.approvedMessage();
@@ -36,19 +36,18 @@ public class CreditCardPaymentTest {
     @Test
     @Order(2)
     void shouldGetErrorIfCardNumberWithRejectedNumber() {
-        titlePage.creditCardPayment();
+        creditCard = titlePage.creditCardPayment();
         var invalidCreditCard = DataGenerator.CardInfo.getCardWithRejectedNumber();
         creditCard.invalidFillField(invalidCreditCard);
         creditCard.errorBankRefusalMessage();
         assertEquals("DECLINED", DataBase.getCreditCardTransactionStatus());
-        assertEquals("null", DataBase.getOrderTransactionCreditCard());
     }
 
     // Негативный тест: Поле 'Номер карты' заполнено невалидными данными;
     @Test
     @Order(3)
     void shouldGetErrorIfInvalidCardNumber() {
-        titlePage.creditCardPayment();
+        creditCard = titlePage.creditCardPayment();
         var invalidCreditCard = DataGenerator.CardInfo.getInvalidCardNumber();
         creditCard.invalidFillField(invalidCreditCard);
         creditCard.errorBankRefusalMessage();
@@ -58,7 +57,7 @@ public class CreditCardPaymentTest {
     @Test
     @Order(4)
     void shouldGetErrorIfCardNumberWithWordInNumber() {
-        titlePage.creditCardPayment();
+        creditCard = titlePage.creditCardPayment();
         var invalidCreditCard = DataGenerator.CardInfo.getCardNumberWithWordInNumber();
         creditCard.invalidFillField(invalidCreditCard);
         creditCard.errorMessageIncorrectFormat();
@@ -68,7 +67,7 @@ public class CreditCardPaymentTest {
     @Test
     @Order(5)
     void shouldGetErrorIfCardNumberFieldIsEmpty() {
-        titlePage.creditCardPayment();
+        creditCard = titlePage.creditCardPayment();
         var invalidCreditCard = DataGenerator.CardInfo.getCardNumberFieldEmpty();
         creditCard.invalidFillField(invalidCreditCard);
         creditCard.errorMessageIncorrectFormat();
@@ -78,7 +77,7 @@ public class CreditCardPaymentTest {
     @Test
     @Order(6)
     void shouldGetErrorIfCardNumberFieldConsistsLetters() {
-        titlePage.creditCardPayment();
+        creditCard = titlePage.creditCardPayment();
         var invalidCreditCard = DataGenerator.CardInfo.getCardNumberFieldConsistsOfLetters();
         creditCard.invalidFillField(invalidCreditCard);
         creditCard.errorMessageIncorrectFormat();
@@ -88,7 +87,7 @@ public class CreditCardPaymentTest {
     @Test
     @Order(7)
     void shouldGetErrorIfCardNumberFieldWithSpecialCharacters() {
-        titlePage.creditCardPayment();
+        creditCard = titlePage.creditCardPayment();
         var invalidCreditCard = DataGenerator.CardInfo.getCardNumberFieldWithSpecialCharacters();
         creditCard.invalidFillField(invalidCreditCard);
         creditCard.errorMessageIncorrectFormat();
@@ -98,7 +97,7 @@ public class CreditCardPaymentTest {
     @Test
     @Order(8)
     void shouldGetErrorIfCardNumberFieldConsistsOneCharacters() {
-        titlePage.creditCardPayment();
+        creditCard = titlePage.creditCardPayment();
         var invalidCreditCard = DataGenerator.CardInfo.getCardNumberFieldConsistsOneCharacter();
         creditCard.invalidFillField(invalidCreditCard);
         creditCard.errorMessageIncorrectFormat();
@@ -110,7 +109,7 @@ public class CreditCardPaymentTest {
     @Test
     @Order(9)
     void shouldGetErrorIfInvalidMonthField() {
-        titlePage.creditCardPayment();
+        creditCard = titlePage.creditCardPayment();
         var invalidCreditCard = DataGenerator.CardInfo.getInvalidMonthField();
         creditCard.invalidFillField(invalidCreditCard);
         creditCard.errorMessageCardExpirationDateIncorrect();
@@ -120,7 +119,7 @@ public class CreditCardPaymentTest {
     @Test
     @Order(10)
     void shouldGetErrorIfMonthFieldWithSpecialCharacters() {
-        titlePage.creditCardPayment();
+        creditCard = titlePage.creditCardPayment();
         var invalidCreditCard = DataGenerator.CardInfo.getMonthFieldWithSpecialCharacters();
         creditCard.invalidFillField(invalidCreditCard);
         creditCard.errorMessageIncorrectFormat();
@@ -130,7 +129,7 @@ public class CreditCardPaymentTest {
     @Test
     @Order(11)
     void shouldGetErrorIfMonthFieldEmpty() {
-        titlePage.creditCardPayment();
+        creditCard = titlePage.creditCardPayment();
         var invalidCreditCard = DataGenerator.CardInfo.getMonthFieldEmpty();
         creditCard.invalidFillField(invalidCreditCard);
         creditCard.errorMessageIncorrectFormat();
@@ -140,7 +139,7 @@ public class CreditCardPaymentTest {
     @Test
     @Order(12)
     void shouldGetErrorIfMonthFieldConsistsOneCharacters() {
-        titlePage.creditCardPayment();
+        creditCard = titlePage.creditCardPayment();
         var invalidCreditCard = DataGenerator.CardInfo.getMonthFieldOneCharacter();
         creditCard.invalidFillField(invalidCreditCard);
         creditCard.errorMessageIncorrectFormat();
@@ -150,7 +149,7 @@ public class CreditCardPaymentTest {
     @Test
     @Order(13)
     void shouldGetErrorIfMonthFieldConsistsOfLetters() {
-        titlePage.creditCardPayment();
+        creditCard = titlePage.creditCardPayment();
         var invalidCreditCard = DataGenerator.CardInfo.getMonthFieldConsistsOfLetters();
         creditCard.invalidFillField(invalidCreditCard);
         creditCard.errorMessageIncorrectFormat();
@@ -160,7 +159,7 @@ public class CreditCardPaymentTest {
     @Test
     @Order(14)
     void shouldGetErrorIfMonthHasExpired() {
-        titlePage.creditCardPayment();
+        creditCard = titlePage.creditCardPayment();
         var invalidCreditCard = DataGenerator.CardInfo.getLastMonth();
         creditCard.invalidFillField(invalidCreditCard);
         creditCard.errorMessageCardExpirationDateIncorrect();
@@ -172,7 +171,7 @@ public class CreditCardPaymentTest {
     @Test
     @Order(15)
     void shouldGetErrorIfLastYear() {
-        titlePage.creditCardPayment();
+        creditCard = titlePage.creditCardPayment();
         var invalidCreditCard = DataGenerator.CardInfo.getLastYear();
         creditCard.invalidFillField(invalidCreditCard);
         creditCard.errorMessageByIncorrectFormatYearField();
@@ -182,7 +181,7 @@ public class CreditCardPaymentTest {
     @Test
     @Order(16)
     void shouldGetErrorIfYearFieldWithSpecialCharacters() {
-        titlePage.creditCardPayment();
+        creditCard = titlePage.creditCardPayment();
         var invalidCreditCard = DataGenerator.CardInfo.getYearFieldWithSpecialCharacters();
         creditCard.invalidFillField(invalidCreditCard);
         creditCard.errorMessageIncorrectFormat();
@@ -192,7 +191,7 @@ public class CreditCardPaymentTest {
     @Test
     @Order(17)
     void shouldGetErrorIfYearFieldEmpty() {
-        titlePage.creditCardPayment();
+        creditCard = titlePage.creditCardPayment();
         var invalidCreditCard = DataGenerator.CardInfo.getYearFieldEmpty();
         creditCard.invalidFillField(invalidCreditCard);
         creditCard.errorMessageIncorrectFormat();
@@ -202,7 +201,7 @@ public class CreditCardPaymentTest {
     @Test
     @Order(18)
     void shouldGetErrorIfYearFieldConsistsOneCharacters() {
-        titlePage.creditCardPayment();
+        creditCard = titlePage.creditCardPayment();
         var invalidCreditCard = DataGenerator.CardInfo.getYearFieldOneCharacter();
         creditCard.invalidFillField(invalidCreditCard);
         creditCard.errorMessageIncorrectFormat();
@@ -212,7 +211,7 @@ public class CreditCardPaymentTest {
     @Test
     @Order(19)
     void shouldGetErrorIfYearFieldConsistsOfLetters() {
-        titlePage.creditCardPayment();
+        creditCard = titlePage.creditCardPayment();
         var invalidCreditCard = DataGenerator.CardInfo.getYearFieldConsistsOfLetters();
         creditCard.invalidFillField(invalidCreditCard);
         creditCard.errorMessageIncorrectFormat();
@@ -222,7 +221,7 @@ public class CreditCardPaymentTest {
     @Test
     @Order(20)
     void shouldGetErrorIfYearHasExpired() {
-        titlePage.creditCardPayment();
+        creditCard = titlePage.creditCardPayment();
         var invalidCreditCard = DataGenerator.CardInfo.getYearHasExpired();
         creditCard.invalidFillField(invalidCreditCard);
         creditCard.errorMessageCardExpirationDateIncorrect();
@@ -232,7 +231,7 @@ public class CreditCardPaymentTest {
     @Test
     @Order(21)
     void shouldGetErrorIfYearBeforeExpirationDate() {
-        titlePage.creditCardPayment();
+        creditCard = titlePage.creditCardPayment();
         var invalidCreditCard = DataGenerator.CardInfo.getYearBeforeExpirationDate();
         creditCard.invalidFillField(invalidCreditCard);
         creditCard.approvedMessage();
@@ -245,7 +244,7 @@ public class CreditCardPaymentTest {
     @Test
     @Order(22)
     void shouldGetErrorIfOwnerFieldWithLettersAndNumbers() {
-        titlePage.creditCardPayment();
+        creditCard = titlePage.creditCardPayment();
         var invalidCreditCard = DataGenerator.CardInfo.getOwnerFieldWithLettersAndNumbers();
         creditCard.invalidFillField(invalidCreditCard);
         creditCard.errorMessageIncorrectFormat();
@@ -255,7 +254,7 @@ public class CreditCardPaymentTest {
     @Test
     @Order(23)
     void shouldGetErrorIfOwnerFieldWithSpecialCharacters() {
-        titlePage.creditCardPayment();
+        creditCard = titlePage.creditCardPayment();
         var invalidCreditCard = DataGenerator.CardInfo.getOwnerFieldWithSpecialCharacters();
         creditCard.invalidFillField(invalidCreditCard);
         creditCard.errorMessageIncorrectFormat();
@@ -265,7 +264,7 @@ public class CreditCardPaymentTest {
     @Test
     @Order(24)
     void shouldGetErrorIfOwnerFieldEmpty() {
-        titlePage.creditCardPayment();
+        creditCard = titlePage.creditCardPayment();
         var invalidCreditCard = DataGenerator.CardInfo.getOwnerFieldEmpty();
         creditCard.invalidFillField(invalidCreditCard);
         creditCard.errorMessageEmptyField();
@@ -275,7 +274,7 @@ public class CreditCardPaymentTest {
     @Test
     @Order(25)
     void shouldGetErrorIfOwnerFieldConsistsOneCharacters() {
-        titlePage.creditCardPayment();
+        creditCard = titlePage.creditCardPayment();
         var invalidCreditCard = DataGenerator.CardInfo.getOwnerFieldConsistsOneCharacters();
         creditCard.invalidFillField(invalidCreditCard);
         creditCard.errorMessageIncorrectFormat();
@@ -285,7 +284,7 @@ public class CreditCardPaymentTest {
     @Test
     @Order(26)
     void shouldGetErrorIfOwnerFieldConsistsOfLetters() {
-        titlePage.creditCardPayment();
+        creditCard = titlePage.creditCardPayment();
         var invalidCreditCard = DataGenerator.CardInfo.getOwnerFieldConsistsOfLettersDifferentRegister();
         creditCard.invalidFillField(invalidCreditCard);
         creditCard.errorMessageIncorrectFormat();
@@ -295,7 +294,7 @@ public class CreditCardPaymentTest {
     @Test
     @Order(27)
     void shouldGetErrorIfOwnerFieldWithDoubleSurname() {
-        titlePage.creditCardPayment();
+        creditCard = titlePage.creditCardPayment();
         var invalidCreditCard = DataGenerator.CardInfo.getOwnerFieldWithDoubleSurname();
         creditCard.invalidFillField(invalidCreditCard);
         creditCard.approvedMessage();
@@ -306,7 +305,7 @@ public class CreditCardPaymentTest {
     @Test
     @Order(28)
     void shouldGetErrorIfOwnerFieldInCyrillic() {
-        titlePage.creditCardPayment();
+        creditCard = titlePage.creditCardPayment();
         var invalidCreditCard = DataGenerator.CardInfo.getOwnerFieldInCyrillic();
         creditCard.invalidFillField(invalidCreditCard);
         creditCard.errorMessageIncorrectFormat();
@@ -316,7 +315,7 @@ public class CreditCardPaymentTest {
     @Test
     @Order(29)
     void shouldGetErrorIfOwnerFieldWithMaxLength() {
-        titlePage.creditCardPayment();
+        creditCard = titlePage.creditCardPayment();
         var invalidCreditCard = DataGenerator.CardInfo.getOwnerFieldWithMaxLength();
         creditCard.invalidFillField(invalidCreditCard);
         creditCard.errorMessageIncorrectFormat();
@@ -328,7 +327,7 @@ public class CreditCardPaymentTest {
     @Test
     @Order(30)
     void shouldGetErrorIfInvalidCVCField() {
-        titlePage.creditCardPayment();
+        creditCard = titlePage.creditCardPayment();
         var invalidCreditCard = DataGenerator.CardInfo.getInvalidCVCField();
         creditCard.invalidFillField(invalidCreditCard);
         creditCard.errorMessageIncorrectFormat();
@@ -338,7 +337,7 @@ public class CreditCardPaymentTest {
     @Test
     @Order(31)
     void shouldGetErrorIfCVCFieldWithSpecialCharacters() {
-        titlePage.creditCardPayment();
+        creditCard = titlePage.creditCardPayment();
         var invalidCreditCard = DataGenerator.CardInfo.getCVCFieldWithSpecialCharacters();
         creditCard.invalidFillField(invalidCreditCard);
         creditCard.errorMessageIncorrectFormat();
@@ -348,7 +347,7 @@ public class CreditCardPaymentTest {
     @Test
     @Order(32)
     void shouldGetErrorIfCVCFieldEmpty() {
-        titlePage.creditCardPayment();
+        creditCard = titlePage.creditCardPayment();
         var invalidCreditCard = DataGenerator.CardInfo.getCVCFieldEmpty();
         creditCard.invalidFillField(invalidCreditCard);
         creditCard.errorMessageIncorrectFormat();
@@ -358,7 +357,7 @@ public class CreditCardPaymentTest {
     @Test
     @Order(33)
     void shouldGetErrorIfCVCFieldConsistsOneCharacters() {
-        titlePage.creditCardPayment();
+        creditCard = titlePage.creditCardPayment();
         var invalidCreditCard = DataGenerator.CardInfo.getCVCFieldConsistsOneCharacters();
         creditCard.invalidFillField(invalidCreditCard);
         creditCard.errorMessageIncorrectFormat();
@@ -368,7 +367,7 @@ public class CreditCardPaymentTest {
     @Test
     @Order(34)
     void shouldGetErrorIfCVCFieldConsistsOfLetters() {
-        titlePage.creditCardPayment();
+        creditCard = titlePage.creditCardPayment();
         var invalidCreditCard = DataGenerator.CardInfo.getCVCFieldConsistsOfLetters();
         creditCard.invalidFillField(invalidCreditCard);
         creditCard.errorMessageIncorrectFormat();

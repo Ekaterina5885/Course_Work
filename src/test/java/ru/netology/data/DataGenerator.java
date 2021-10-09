@@ -1,8 +1,6 @@
 package ru.netology.data;
 
 import com.github.javafaker.Faker;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.Value;
 
 import java.time.LocalDate;
@@ -12,11 +10,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 
-@Data
-@NoArgsConstructor
 public class DataGenerator {
-    private static final Faker faker = new Faker(new Locale("en"));
-
 
     @Value
     public static class CardInfo {
@@ -414,30 +408,32 @@ public class DataGenerator {
 
 // Тестовые данные;
 
-    public static String getValidCardNumber() {
+    private static final Faker faker = new Faker(new Locale("en"));
+
+    private static String getValidCardNumber() {
         return "4444444444444441";
     }
 
-    public static String getCardRejectedNumber() {
+    private static String getCardRejectedNumber() {
         return "4444444444444442";
     }
 
-    public static String generateValidOwner() {
+    private static String generateValidOwner() {
         Faker faker = new Faker(new Locale("en-AU"));
         return faker.name().firstName() + " " + faker.name().lastName();
     }
 
-    public static String generateOwnerFieldInCyrillic() {
+    private static String generateOwnerFieldInCyrillic() {
         Faker faker = new Faker(new Locale("ru"));
         return faker.name().firstName() + " " + faker.name().lastName();
     }
 
-    public static String getNameWithDoubleSurname() {
+    private static String getNameWithDoubleSurname() {
         Faker faker = new Faker(new Locale("en-AU"));
         return faker.name().firstName() + " " + faker.name().lastName() + "-" + faker.name().lastName();
     }
 
-    public static String generateSpecialCharacters() {
+    private static String generateSpecialCharacters() {
         Random rand = new Random();
         List<String> list = Arrays.asList("~", "`", "@", "!", "#", "$", "%", "^", "&", "*", "(", ")", "/", "+",
                 "№", ";", ":", "?", "<", ">", "{", "}");
@@ -445,37 +441,37 @@ public class DataGenerator {
         return list.get(randomIndex);
     }
 
-    public static String generateValidCVC() {
+    private static String generateValidCVC() {
         return faker.numerify("###");
     }
 
-    public static String generateValidMonth() {
+    private static String generateValidMonth() {
         LocalDate monthNow = LocalDate.now();
         return monthNow.format(DateTimeFormatter.ofPattern("MM"));
     }
 
-    public static String generateLastMonth() {
+    private static String generateLastMonth() {
         LocalDate monthLast = LocalDate.now().minusMonths(1);
         return monthLast.format(DateTimeFormatter.ofPattern("MM"));
     }
 
-    public static String generateValidYear() {
-        LocalDate monthNow = LocalDate.now();
-        return monthNow.format(DateTimeFormatter.ofPattern("yy"));
+    private static String generateValidYear() {
+        LocalDate yearNow = LocalDate.now();
+        return yearNow.format(DateTimeFormatter.ofPattern("yy"));
     }
 
-    public static String generateLastYear() {
-        LocalDate monthNow = LocalDate.now().minusYears(1);
-        return monthNow.format(DateTimeFormatter.ofPattern("yy"));
+    private static String generateLastYear() {
+        LocalDate yearLast = LocalDate.now().minusYears(1);
+        return yearLast.format(DateTimeFormatter.ofPattern("yy"));
     }
 
-    public static String generateYearHasExpired() {
-        LocalDate monthNow = LocalDate.now().plusYears(6);
-        return monthNow.format(DateTimeFormatter.ofPattern("yy"));
+    private static String generateYearHasExpired() {
+        LocalDate yearExpired = LocalDate.now().plusYears(6);
+        return yearExpired.format(DateTimeFormatter.ofPattern("yy"));
     }
 
-    public static String generateYearBeforeExpirationDate() {
-        LocalDate monthNow = LocalDate.now().plusYears(5);
-        return monthNow.format(DateTimeFormatter.ofPattern("yy"));
+    private static String generateYearBeforeExpirationDate() {
+        LocalDate yearBeforeExpired = LocalDate.now().plusYears(5);
+        return yearBeforeExpired.format(DateTimeFormatter.ofPattern("yy"));
     }
 }

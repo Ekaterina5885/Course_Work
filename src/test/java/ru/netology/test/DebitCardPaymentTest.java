@@ -10,12 +10,13 @@ import static com.codeborne.selenide.Selenide.open;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class DebitCardPaymentTest {
-    private final DebitCardPaymentPage debitCard = new DebitCardPaymentPage();
-    private final TitlePage titlePage = new TitlePage();
+
+    private DebitCardPaymentPage debitCard;
+    private TitlePage titlePage;
 
     @BeforeEach
     public void setOpen() {
-        open("http://localhost:8080");
+        titlePage = open("http://localhost:8080", TitlePage.class);
     }
 
 // Проверка поля "Номер карты";
@@ -24,7 +25,7 @@ public class DebitCardPaymentTest {
     @Test
     @Order(1)
     void shouldSendFormSuccessFully() {
-        titlePage.debitCardPayment();
+        debitCard = titlePage.debitCardPayment();
         var validDebitCard = DataGenerator.CardInfo.getValidCardPayment();
         debitCard.validFillFieldDebitCard(validDebitCard);
         debitCard.approvedMessage();
@@ -35,19 +36,18 @@ public class DebitCardPaymentTest {
     @Test
     @Order(2)
     void shouldGetErrorIfCardNumberWithRejectedNumber() {
-        titlePage.debitCardPayment();
+        debitCard = titlePage.debitCardPayment();
         var invalidDebitCard = DataGenerator.CardInfo.getCardWithRejectedNumber();
         debitCard.invalidFillFieldDebitCard(invalidDebitCard);
         debitCard.errorBankRefusalMessage();
         assertEquals("DECLINED", DataBase.getDebitCardTransactionStatus());
-        assertEquals("null", DataBase.getOrderTransactionDebitCard());
     }
 
     // Негативный тест: Поле 'Номер карты' заполнено невалидными данными;
     @Test
     @Order(3)
     void shouldGetErrorIfInvalidCardNumber() {
-        titlePage.debitCardPayment();
+        debitCard = titlePage.debitCardPayment();
         var invalidDebitCard = DataGenerator.CardInfo.getInvalidCardNumber();
         debitCard.invalidFillFieldDebitCard(invalidDebitCard);
         debitCard.errorBankRefusalMessage();
@@ -57,7 +57,7 @@ public class DebitCardPaymentTest {
     @Test
     @Order(4)
     void shouldGetErrorIfCardNumberWithWordInNumber() {
-        titlePage.debitCardPayment();
+        debitCard = titlePage.debitCardPayment();
         var invalidDebitCard = DataGenerator.CardInfo.getCardNumberWithWordInNumber();
         debitCard.invalidFillFieldDebitCard(invalidDebitCard);
         debitCard.errorMessageIncorrectFormat();
@@ -67,7 +67,7 @@ public class DebitCardPaymentTest {
     @Test
     @Order(5)
     void shouldGetErrorIfCardNumberFieldIsEmpty() {
-        titlePage.debitCardPayment();
+        debitCard = titlePage.debitCardPayment();
         var invalidDebitCard = DataGenerator.CardInfo.getCardNumberFieldEmpty();
         debitCard.invalidFillFieldDebitCard(invalidDebitCard);
         debitCard.errorMessageIncorrectFormat();
@@ -77,7 +77,7 @@ public class DebitCardPaymentTest {
     @Test
     @Order(6)
     void shouldGetErrorIfCardNumberFieldConsistsLetters() {
-        titlePage.debitCardPayment();
+        debitCard = titlePage.debitCardPayment();
         var invalidDebitCard = DataGenerator.CardInfo.getCardNumberFieldConsistsOfLetters();
         debitCard.invalidFillFieldDebitCard(invalidDebitCard);
         debitCard.errorMessageIncorrectFormat();
@@ -87,7 +87,7 @@ public class DebitCardPaymentTest {
     @Test
     @Order(7)
     void shouldGetErrorIfCardNumberFieldWithSpecialCharacters() {
-        titlePage.debitCardPayment();
+        debitCard = titlePage.debitCardPayment();
         var invalidDebitCard = DataGenerator.CardInfo.getCardNumberFieldWithSpecialCharacters();
         debitCard.invalidFillFieldDebitCard(invalidDebitCard);
         debitCard.errorMessageIncorrectFormat();
@@ -97,7 +97,7 @@ public class DebitCardPaymentTest {
     @Test
     @Order(8)
     void shouldGetErrorIfCardNumberFieldConsistsOneCharacters() {
-        titlePage.debitCardPayment();
+        debitCard = titlePage.debitCardPayment();
         var invalidDebitCard = DataGenerator.CardInfo.getCardNumberFieldConsistsOneCharacter();
         debitCard.invalidFillFieldDebitCard(invalidDebitCard);
         debitCard.errorMessageIncorrectFormat();
@@ -109,7 +109,7 @@ public class DebitCardPaymentTest {
     @Test
     @Order(9)
     void shouldGetErrorIfInvalidMonthField() {
-        titlePage.debitCardPayment();
+        debitCard = titlePage.debitCardPayment();
         var invalidDebitCard = DataGenerator.CardInfo.getInvalidMonthField();
         debitCard.invalidFillFieldDebitCard(invalidDebitCard);
         debitCard.errorMessageCardExpirationDateIncorrect();
@@ -119,7 +119,7 @@ public class DebitCardPaymentTest {
     @Test
     @Order(10)
     void shouldGetErrorIfMonthFieldWithSpecialCharacters() {
-        titlePage.debitCardPayment();
+        debitCard = titlePage.debitCardPayment();
         var invalidDebitCard = DataGenerator.CardInfo.getMonthFieldWithSpecialCharacters();
         debitCard.invalidFillFieldDebitCard(invalidDebitCard);
         debitCard.errorMessageIncorrectFormat();
@@ -129,7 +129,7 @@ public class DebitCardPaymentTest {
     @Test
     @Order(11)
     void shouldGetErrorIfMonthFieldEmpty() {
-        titlePage.debitCardPayment();
+        debitCard = titlePage.debitCardPayment();
         var invalidDebitCard = DataGenerator.CardInfo.getMonthFieldEmpty();
         debitCard.invalidFillFieldDebitCard(invalidDebitCard);
         debitCard.errorMessageIncorrectFormat();
@@ -139,7 +139,7 @@ public class DebitCardPaymentTest {
     @Test
     @Order(12)
     void shouldGetErrorIfMonthFieldConsistsOneCharacters() {
-        titlePage.debitCardPayment();
+        debitCard = titlePage.debitCardPayment();
         var invalidDebitCard = DataGenerator.CardInfo.getMonthFieldOneCharacter();
         debitCard.invalidFillFieldDebitCard(invalidDebitCard);
         debitCard.errorMessageIncorrectFormat();
@@ -149,7 +149,7 @@ public class DebitCardPaymentTest {
     @Test
     @Order(13)
     void shouldGetErrorIfMonthFieldConsistsOfLetters() {
-        titlePage.debitCardPayment();
+        debitCard = titlePage.debitCardPayment();
         var invalidDebitCard = DataGenerator.CardInfo.getMonthFieldConsistsOfLetters();
         debitCard.invalidFillFieldDebitCard(invalidDebitCard);
         debitCard.errorMessageIncorrectFormat();
@@ -159,7 +159,7 @@ public class DebitCardPaymentTest {
     @Test
     @Order(14)
     void shouldGetErrorIfMonthHasExpired() {
-        titlePage.debitCardPayment();
+        debitCard = titlePage.debitCardPayment();
         var invalidDebitCard = DataGenerator.CardInfo.getLastMonth();
         debitCard.invalidFillFieldDebitCard(invalidDebitCard);
         debitCard.errorMessageCardExpirationDateIncorrect();
@@ -171,7 +171,7 @@ public class DebitCardPaymentTest {
     @Test
     @Order(15)
     void shouldGetErrorIfLastYear() {
-        titlePage.creditCardPayment();
+        debitCard = titlePage.debitCardPayment();
         var invalidDebitCard = DataGenerator.CardInfo.getLastYear();
         debitCard.invalidFillFieldDebitCard(invalidDebitCard);
         debitCard.errorMessageByIncorrectFormatYearField();
@@ -181,7 +181,7 @@ public class DebitCardPaymentTest {
     @Test
     @Order(16)
     void shouldGetErrorIfYearFieldWithSpecialCharacters() {
-        titlePage.debitCardPayment();
+        debitCard = titlePage.debitCardPayment();
         var invalidDebitCard = DataGenerator.CardInfo.getYearFieldWithSpecialCharacters();
         debitCard.invalidFillFieldDebitCard(invalidDebitCard);
         debitCard.errorMessageIncorrectFormat();
@@ -191,7 +191,7 @@ public class DebitCardPaymentTest {
     @Test
     @Order(17)
     void shouldGetErrorIfYearFieldEmpty() {
-        titlePage.debitCardPayment();
+        debitCard = titlePage.debitCardPayment();
         var invalidDebitCard = DataGenerator.CardInfo.getYearFieldEmpty();
         debitCard.invalidFillFieldDebitCard(invalidDebitCard);
         debitCard.errorMessageIncorrectFormat();
@@ -201,7 +201,7 @@ public class DebitCardPaymentTest {
     @Test
     @Order(18)
     void shouldGetErrorIfYearFieldConsistsOneCharacters() {
-        titlePage.debitCardPayment();
+        debitCard = titlePage.debitCardPayment();
         var invalidDebitCard = DataGenerator.CardInfo.getYearFieldOneCharacter();
         debitCard.invalidFillFieldDebitCard(invalidDebitCard);
         debitCard.errorMessageIncorrectFormat();
@@ -211,7 +211,7 @@ public class DebitCardPaymentTest {
     @Test
     @Order(19)
     void shouldGetErrorIfYearFieldConsistsOfLetters() {
-        titlePage.debitCardPayment();
+        debitCard = titlePage.debitCardPayment();
         var invalidDebitCard = DataGenerator.CardInfo.getYearFieldConsistsOfLetters();
         debitCard.invalidFillFieldDebitCard(invalidDebitCard);
         debitCard.errorMessageIncorrectFormat();
@@ -221,7 +221,7 @@ public class DebitCardPaymentTest {
     @Test
     @Order(20)
     void shouldGetErrorIfYearHasExpired() {
-        titlePage.creditCardPayment();
+        debitCard = titlePage.debitCardPayment();
         var invalidDebitCard = DataGenerator.CardInfo.getYearHasExpired();
         debitCard.invalidFillFieldDebitCard(invalidDebitCard);
         debitCard.errorMessageCardExpirationDateIncorrect();
@@ -231,7 +231,7 @@ public class DebitCardPaymentTest {
     @Test
     @Order(21)
     void shouldGetErrorIfYearBeforeExpirationDate() {
-        titlePage.creditCardPayment();
+        debitCard = titlePage.debitCardPayment();
         var invalidDebitCard = DataGenerator.CardInfo.getYearBeforeExpirationDate();
         debitCard.invalidFillFieldDebitCard(invalidDebitCard);
         debitCard.approvedMessage();
@@ -244,7 +244,7 @@ public class DebitCardPaymentTest {
     @Test
     @Order(22)
     void shouldGetErrorIfInvalidOwnerField() {
-        titlePage.debitCardPayment();
+        debitCard = titlePage.debitCardPayment();
         var invalidDebitCard = DataGenerator.CardInfo.getOwnerFieldWithLettersAndNumbers();
         debitCard.invalidFillFieldDebitCard(invalidDebitCard);
         debitCard.errorMessageIncorrectFormat();
@@ -254,7 +254,7 @@ public class DebitCardPaymentTest {
     @Test
     @Order(23)
     void shouldGetErrorIfOwnerFieldWithSpecialCharacters() {
-        titlePage.debitCardPayment();
+        debitCard = titlePage.debitCardPayment();
         var invalidDebitCard = DataGenerator.CardInfo.getOwnerFieldWithSpecialCharacters();
         debitCard.invalidFillFieldDebitCard(invalidDebitCard);
         debitCard.errorMessageIncorrectFormat();
@@ -264,7 +264,7 @@ public class DebitCardPaymentTest {
     @Test
     @Order(24)
     void shouldGetErrorIfOwnerFieldEmpty() {
-        titlePage.debitCardPayment();
+        debitCard = titlePage.debitCardPayment();
         var invalidDebitCard = DataGenerator.CardInfo.getOwnerFieldEmpty();
         debitCard.invalidFillFieldDebitCard(invalidDebitCard);
         debitCard.errorMessageEmptyField();
@@ -274,7 +274,7 @@ public class DebitCardPaymentTest {
     @Test
     @Order(25)
     void shouldGetErrorIfOwnerFieldConsistsOneCharacters() {
-        titlePage.debitCardPayment();
+        debitCard = titlePage.debitCardPayment();
         var invalidDebitCard = DataGenerator.CardInfo.getOwnerFieldConsistsOneCharacters();
         debitCard.invalidFillFieldDebitCard(invalidDebitCard);
         debitCard.errorMessageIncorrectFormat();
@@ -284,7 +284,7 @@ public class DebitCardPaymentTest {
     @Test
     @Order(26)
     void shouldGetErrorIfOwnerFieldWithDoubleSurname() {
-        titlePage.debitCardPayment();
+        debitCard = titlePage.debitCardPayment();
         var invalidDebitCard = DataGenerator.CardInfo.getOwnerFieldWithDoubleSurname();
         debitCard.invalidFillFieldDebitCard(invalidDebitCard);
         debitCard.approvedMessage();
@@ -295,7 +295,7 @@ public class DebitCardPaymentTest {
     @Test
     @Order(27)
     void shouldGetErrorIfOwnerFieldInCyrillic() {
-        titlePage.debitCardPayment();
+        debitCard = titlePage.debitCardPayment();
         var invalidDebitCard = DataGenerator.CardInfo.getOwnerFieldInCyrillic();
         debitCard.invalidFillFieldDebitCard(invalidDebitCard);
         debitCard.errorMessageIncorrectFormat();
@@ -305,7 +305,7 @@ public class DebitCardPaymentTest {
     @Test
     @Order(28)
     void shouldGetErrorIfOwnerFieldConsistsOfLetters() {
-        titlePage.debitCardPayment();
+        debitCard = titlePage.debitCardPayment();
         var invalidDebitCard = DataGenerator.CardInfo.getOwnerFieldConsistsOfLettersDifferentRegister();
         debitCard.invalidFillFieldDebitCard(invalidDebitCard);
         debitCard.errorMessageIncorrectFormat();
@@ -315,7 +315,7 @@ public class DebitCardPaymentTest {
     @Test
     @Order(29)
     void shouldGetErrorIfOwnerFieldWithMaxLength() {
-        titlePage.debitCardPayment();
+        debitCard = titlePage.debitCardPayment();
         var invalidDebitCard = DataGenerator.CardInfo.getOwnerFieldWithMaxLength();
         debitCard.invalidFillFieldDebitCard(invalidDebitCard);
         debitCard.errorMessageIncorrectFormat();
@@ -327,7 +327,7 @@ public class DebitCardPaymentTest {
     @Test
     @Order(30)
     void shouldGetErrorIfInvalidCVCField() {
-        titlePage.debitCardPayment();
+        debitCard = titlePage.debitCardPayment();
         var invalidDebitCard = DataGenerator.CardInfo.getInvalidCVCField();
         debitCard.invalidFillFieldDebitCard(invalidDebitCard);
         debitCard.errorMessageIncorrectFormat();
@@ -337,7 +337,7 @@ public class DebitCardPaymentTest {
     @Test
     @Order(31)
     void shouldGetErrorIfCVCFieldWithSpecialCharacters() {
-        titlePage.debitCardPayment();
+        debitCard = titlePage.debitCardPayment();
         var invalidDebitCard = DataGenerator.CardInfo.getCVCFieldWithSpecialCharacters();
         debitCard.invalidFillFieldDebitCard(invalidDebitCard);
         debitCard.errorMessageIncorrectFormat();
@@ -347,7 +347,7 @@ public class DebitCardPaymentTest {
     @Test
     @Order(32)
     void shouldGetErrorIfCVCFieldEmpty() {
-        titlePage.debitCardPayment();
+        debitCard = titlePage.debitCardPayment();
         var invalidDebitCard = DataGenerator.CardInfo.getCVCFieldEmpty();
         debitCard.invalidFillFieldDebitCard(invalidDebitCard);
         debitCard.errorMessageIncorrectFormat();
@@ -357,7 +357,7 @@ public class DebitCardPaymentTest {
     @Test
     @Order(33)
     void shouldGetErrorIfCVCFieldConsistsOneCharacters() {
-        titlePage.debitCardPayment();
+        debitCard = titlePage.debitCardPayment();
         var invalidDebitCard = DataGenerator.CardInfo.getCVCFieldConsistsOneCharacters();
         debitCard.invalidFillFieldDebitCard(invalidDebitCard);
         debitCard.errorMessageIncorrectFormat();
@@ -367,7 +367,7 @@ public class DebitCardPaymentTest {
     @Test
     @Order(34)
     void shouldGetErrorIfCVCFieldConsistsOfLetters() {
-        titlePage.debitCardPayment();
+        debitCard = titlePage.debitCardPayment();
         var invalidDebitCard = DataGenerator.CardInfo.getCVCFieldConsistsOfLetters();
         debitCard.invalidFillFieldDebitCard(invalidDebitCard);
         debitCard.errorMessageIncorrectFormat();

@@ -17,21 +17,27 @@
 
    - **1.** Выполнить в окне Терминала команду: ```docker-compose -f docker-compose-mysql.yml up```
    - **2.** Открыть новую вкладку в окне Терминала.
-   - **3.** Выполнить в окне Терминала команду: ```java -jar ./artifacts/aqa-shop.jar```
-   - **4.** Выполнить команду:```gradle clean test```
-   - **5.** Выполнить команду:```gradle allureReport```
-   - **6.** Выполнить команду:```gradle allureServe```
-   - **7.** Остановить работу приложения сочетанием клавиш:```Ctrl + C```
+   - **3.** Выполнить в окне Терминала команду: ```java -jar "-Dspring.datasource.url=jdbc:mysql://localhost:3306/app" ./artifacts/aqa-shop.jar```
+   - **4.** Выполнить команду:```gradlew -Ddb.url=jdbc:mysql://localhost:3306/app clean test```
+   - **5.** Остановить работу приложения сочетанием клавиш:```Ctrl + C```
 
 ### **Для запуска Postgres**
 
-   - **1.** В файле ```build.gradle``` раскомментировать ```41``` строку и закомментировать ```42``` строку;
-   - **2.** В файле ```application.properties``` закомментировать ```3``` строку;
-   - **3.** Выполнить в окне Терминала команду: ```docker-compose -f docker-compose-postgres.yml up```
-   - **4.** Открыть новую вкладку в окне Терминала.
-   - **5.** Выполнить в окне Терминала команду: ```java -jar ./artifacts/aqa-shop.jar```
-   - **6.** Выполнить команду:```gradle clean test```
-   - **7.** Выполнить команду:```gradle allureReport```
-   - **8.** Выполнить команду:```gradle allureServe```
-
+   - **1.** Выполнить в окне Терминала команду: ```docker-compose -f docker-compose-postgres.yml up -d```
+   - **2.** Открыть новую вкладку в окне Терминала.
+   - **5.** Выполнить в окне Терминала команду: ```java -jar "-Dspring.datasource.url=jdbc:postgresql://localhost:5432/app" ./artifacts/aqa-shop.jar```
+   - **6.** Выполнить команду:```gradlew "-Ddb.url=jdbc:postgresql://localhost:5432/app" clean test```
    - **9.** Остановить работу приложения сочетанием клавиш:```Ctrl + C```
+
+### Документация
+
+[План автоматизации тестирования](https://github.com/Ekaterina5885/Course_Work/blob/master/documents/Plan.md)
+
+[Отчёт о проведённом тестировании](https://github.com/Ekaterina5885/Course_Work/blob/master/documents/Report.md)
+
+[Отчёт о проведённой автоматизации](https://github.com/Ekaterina5885/Course_Work/blob/master/documents/Summary.md)
+
+
+java -Dspring.datasource.url=jdbc:mysql://localhost:3306/app -jar ./artifacts/aqa-shop.jar
+java -jar "-Dspring.datasource.url=jdbc:postgresql://localhost:5432/app" ./artifacts/aqa-shop.jar
+java -Dspring.datasource.url=jdbc:mysql://192.168.99.100:3306/app -jar aqa-shop.jar

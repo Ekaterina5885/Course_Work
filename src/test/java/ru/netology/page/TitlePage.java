@@ -14,8 +14,8 @@ public class TitlePage {
         return new DebitCardPaymentPage();
     }
 
-    public void creditCardPayment() {
+    public CreditCardPaymentPage creditCardPayment() {
         creditCardButton.click();
-        new CreditCardPaymentPage();
+        return new CreditCardPaymentPage();
     }
 }
