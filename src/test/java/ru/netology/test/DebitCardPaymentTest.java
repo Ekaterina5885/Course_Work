@@ -21,7 +21,7 @@ public class DebitCardPaymentTest {
 
     @AfterEach
     public void cleanDB() {
-        DataBase.cleanBD();
+        DataBase.cleanDB();
     }
 
 // Проверка поля "Номер карты";
