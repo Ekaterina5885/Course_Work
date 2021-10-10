@@ -39,7 +39,7 @@ public class DataBase {
     }
 
     @SneakyThrows
-    public static void cleanBD() {
+    public static void cleanDB() {
         var connection = DataBase.getConnection();
         connection.createStatement().executeUpdate("TRUNCATE credit_request_entity;");
         connection.createStatement().executeUpdate("TRUNCATE payment_entity;");
