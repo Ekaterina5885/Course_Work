@@ -37,4 +37,12 @@ public class DataBase {
     public static String getCreditCardTransactionStatus() {
         return getValue("SELECT status FROM credit_request_entity;");
     }
+
+    @SneakyThrows
+    public static void cleanBD() {
+        var connection = DataBase.getConnection();
+        connection.createStatement().executeUpdate("TRUNCATE credit_request_entity;");
+        connection.createStatement().executeUpdate("TRUNCATE payment_entity;");
+        connection.createStatement().executeUpdate("TRUNCATE order_entity;");
+    }
 }
